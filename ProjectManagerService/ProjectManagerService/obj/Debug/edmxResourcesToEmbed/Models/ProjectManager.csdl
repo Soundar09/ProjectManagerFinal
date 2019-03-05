@@ -1,0 +1,103 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="ProjectManagerModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="ProjectTable">
+    <Key>
+      <PropertyRef Name="ProjectId" />
+    </Key>
+    <Property Name="ProjectId" Type="Int32" Nullable="false" />
+    <Property Name="ProjectName" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+    <Property Name="Priority" Type="Int32" />
+    <Property Name="StartDate" Type="DateTime" Precision="3" />
+    <Property Name="EndDate" Type="DateTime" Precision="3" />
+    <Property Name="UserId" Type="Int32" />
+    <Property Name="ManagerName" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+    <Property Name="Deleted" Type="Boolean" />
+    <NavigationProperty Name="UserTable" Relationship="Self.FK__ProjectTa__UserI__1A14E395" FromRole="ProjectTable" ToRole="UserTable" />
+    <NavigationProperty Name="TaskTables" Relationship="Self.FK__TaskTable__Proje__182C9B23" FromRole="ProjectTable" ToRole="TaskTable" />
+  </EntityType>
+  <EntityType Name="TaskTable">
+    <Key>
+      <PropertyRef Name="TaskId" />
+    </Key>
+    <Property Name="TaskId" Type="Int32" Nullable="false" />
+    <Property Name="ProjectName" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+    <Property Name="ProjectId" Type="Int32" />
+    <Property Name="TaskName" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+    <Property Name="Priority" Type="Int32" />
+    <Property Name="ParentTask" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+    <Property Name="IsParent" Type="Boolean" />
+    <Property Name="StartDate" Type="DateTime" Precision="3" />
+    <Property Name="EndDate" Type="DateTime" Precision="3" />
+    <Property Name="UserId" Type="Int32" />
+    <Property Name="UserName" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+    <Property Name="Deleted" Type="Boolean" />
+    <Property Name="Status" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="ProjectTable" Relationship="Self.FK__TaskTable__Proje__182C9B23" FromRole="TaskTable" ToRole="ProjectTable" />
+    <NavigationProperty Name="UserTable" Relationship="Self.FK__TaskTable__UserI__1920BF5C" FromRole="TaskTable" ToRole="UserTable" />
+  </EntityType>
+  <EntityType Name="UserTable">
+    <Key>
+      <PropertyRef Name="UserId" />
+    </Key>
+    <Property Name="UserId" Type="Int32" Nullable="false" />
+    <Property Name="FirstName" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+    <Property Name="LastName" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+    <Property Name="EmployeeId" Type="Int32" />
+    <Property Name="Deleted" Type="Boolean" />
+    <NavigationProperty Name="ProjectTables" Relationship="Self.FK__ProjectTa__UserI__1A14E395" FromRole="UserTable" ToRole="ProjectTable" />
+    <NavigationProperty Name="TaskTables" Relationship="Self.FK__TaskTable__UserI__1920BF5C" FromRole="UserTable" ToRole="TaskTable" />
+  </EntityType>
+  <Association Name="FK__ProjectTa__UserI__1A14E395">
+    <End Role="UserTable" Type="Self.UserTable" Multiplicity="0..1" />
+    <End Role="ProjectTable" Type="Self.ProjectTable" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="UserTable">
+        <PropertyRef Name="UserId" />
+      </Principal>
+      <Dependent Role="ProjectTable">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__TaskTable__Proje__182C9B23">
+    <End Role="ProjectTable" Type="Self.ProjectTable" Multiplicity="0..1" />
+    <End Role="TaskTable" Type="Self.TaskTable" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ProjectTable">
+        <PropertyRef Name="ProjectId" />
+      </Principal>
+      <Dependent Role="TaskTable">
+        <PropertyRef Name="ProjectId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__TaskTable__UserI__1920BF5C">
+    <End Role="UserTable" Type="Self.UserTable" Multiplicity="0..1" />
+    <End Role="TaskTable" Type="Self.TaskTable" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="UserTable">
+        <PropertyRef Name="UserId" />
+      </Principal>
+      <Dependent Role="TaskTable">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="ProjectManagerEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="ProjectTables" EntityType="Self.ProjectTable" />
+    <EntitySet Name="TaskTables" EntityType="Self.TaskTable" />
+    <EntitySet Name="UserTables" EntityType="Self.UserTable" />
+    <AssociationSet Name="FK__ProjectTa__UserI__1A14E395" Association="Self.FK__ProjectTa__UserI__1A14E395">
+      <End Role="UserTable" EntitySet="UserTables" />
+      <End Role="ProjectTable" EntitySet="ProjectTables" />
+    </AssociationSet>
+    <AssociationSet Name="FK__TaskTable__Proje__182C9B23" Association="Self.FK__TaskTable__Proje__182C9B23">
+      <End Role="ProjectTable" EntitySet="ProjectTables" />
+      <End Role="TaskTable" EntitySet="TaskTables" />
+    </AssociationSet>
+    <AssociationSet Name="FK__TaskTable__UserI__1920BF5C" Association="Self.FK__TaskTable__UserI__1920BF5C">
+      <End Role="UserTable" EntitySet="UserTables" />
+      <End Role="TaskTable" EntitySet="TaskTables" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>
